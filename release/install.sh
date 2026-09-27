@@ -11,8 +11,16 @@ if ! docker compose version >/dev/null 2>&1; then
   exit 1
 fi
 
+case "$(uname -m)" in
+  x86_64) arch=amd64 ;;
+  aarch64|arm64) arch=arm64 ;;
+  *) echo "Unsupported architecture: $(uname -m)" >&2; exit 1 ;;
+esac
+image_file="tg-signer-dashboard-${arch}.tar.gz"
+test -f "$image_file" || { echo "Missing $image_file for this host" >&2; exit 1; }
 sha256sum -c SHA256SUMS
-docker load -i tg-signer-dashboard.tar.gz
+docker load -i "$image_file"
+
 mkdir -p data
 chmod 700 data
 if [ "$(id -u)" = 0 ]; then

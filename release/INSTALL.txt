@@ -1,7 +1,10 @@
 tg-signer Dashboard 发布包安装说明
 ====================================
 
-本目录中的完整 VPS 包适用于 Linux x86_64 / amd64，并包含已构建的 Docker 镜像。
+发布仓库：https://github.com/hbsx/TG-SIGNER/releases
+全新安装可使用 https://github.com/hbsx/TG-SIGNER/blob/main/scripts/install-release.sh 自动选择架构并下载。
+
+本目录中的完整 VPS 包按架构分为 Linux x86_64 / amd64 和 aarch64 / arm64，分别包含对应架构的 Docker 镜像。
 发布包不包含账号、任务、Telegram Session、数据库或任何密钥。
 
 1. 准备 Docker
@@ -16,6 +19,8 @@ Ubuntu / Debian 未安装 Docker 时，以 root 执行：
 
 2. 解压并安装
 --------------
+
+下例以 amd64 为例，ARM64 主机请把文件名中的 amd64 改为 arm64。
 
   mkdir -p /opt/tg-signer
   tar -xzf tg-signer-dashboard-vps-amd64.tar.gz \

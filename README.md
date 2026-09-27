@@ -2,7 +2,7 @@
 
 面向 Telegram 签到、自动化与消息监控的单容器 Web 控制台（当前版本：`1.1.0`）。
 
-源码仓库：<https://github.com/dongbo501/TG-SIGNER> · 上游执行器：<https://github.com/amchii/tg-signer>
+源码仓库：<https://github.com/hbsx/TG-SIGNER> · 原项目：<https://github.com/dongbo501/TG-SIGNER> · 上游执行器：<https://github.com/amchii/tg-signer>
 
 基于 [amchii/tg-signer](https://github.com/amchii/tg-signer) 的中文 Web 控制台。前后端、Telegram 协议库和 tg-signer **打包在一个 Docker 镜像、一个运行容器中**。无需另外部署 Node、Nginx、Redis 或数据库容器。
 
@@ -209,14 +209,21 @@ npm run test:e2e
 
 ## 已构建镜像包与 GitHub Release
 
-每次发布会同时提供源码、Docker 镜像和 Linux amd64 VPS 完整部署包。最新版本请在 GitHub 的
-[Releases](https://github.com/dongbo501/TG-SIGNER/releases) 页面下载；发布资产包含：
+每次发布会分别在原生 amd64 和 ARM64 构建机上编译，并提供对应架构的 Docker 镜像和 VPS 完整部署包。最新版本请在本 fork 的
+[Releases](https://github.com/hbsx/TG-SIGNER/releases) 页面下载；发布资产包含：
 
-- `tg-signer-dashboard.tar.gz`：已构建的 Docker 镜像，可在已有 Compose 项目中导入。
-- `tg-signer-dashboard-vps-amd64.tar.gz`：包含镜像、Compose、安装脚本和说明的完整部署包。
-- `SHA256SUMS` 与 `tg-signer-dashboard-vps-amd64.tar.gz.sha256`：校验文件。
+- `tg-signer-dashboard-{amd64,arm64}.tar.gz`：对应架构的 Docker 镜像。
+- `tg-signer-dashboard-vps-{amd64,arm64}.tar.gz`：包含镜像、Compose、安装脚本和说明的完整部署包。
+- 每个资产附带 `.sha256` 校验文件，完整部署包内部还有 `SHA256SUMS`。
 
-完整部署包适用于 Linux x86_64 / amd64，包内不包含账号、任务数据或密钥。下载后执行：
+完整部署包分别适用于 Linux x86_64 / amd64 和 aarch64 / arm64，包内不包含账号、任务数据或密钥。全新安装时，可下载本 fork 的架构识别脚本：
+
+```bash
+curl -fL https://raw.githubusercontent.com/hbsx/TG-SIGNER/main/scripts/install-release.sh -o install-release.sh
+sudo bash install-release.sh
+```
+
+脚本从本 fork 的最新 Release 下载相应架构的部署包并校验 SHA256；已有安装目录时会停止，避免覆盖现有数据和自定义配置。手动下载完整部署包后，按实际架构替换下例的 `amd64`：
 
 ```bash
 mkdir -p /opt/tg-signer
@@ -239,6 +246,6 @@ bash install.sh
 bash scripts/package.sh
 ```
 
-`release/tg-signer-dashboard.tar.gz` 和完整 VPS 压缩包是生成物，已被 Git 忽略；脚本会在
-本地生成并通过 GitHub Release 上传。发布包使用当前 `docker-compose.yml`，不会打包 `data/`、
+`release/tg-signer-dashboard-{amd64,arm64}.tar.gz` 和完整 VPS 压缩包是生成物，已被 Git 忽略；脚本会在
+本地生成，推送 `v*` 标签后由 GitHub Actions 上传到本 fork 的 Release。发布包使用当前 `docker-compose.yml`，不会打包 `data/`、
 `.env`、Telegram Session 或日志。
